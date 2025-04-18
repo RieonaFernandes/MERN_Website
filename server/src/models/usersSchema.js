@@ -43,6 +43,7 @@ const usersSchema = new Schema(
     },
     isActive: {
       type: Boolean,
+      default: true,
     },
     lastLogin: {
       type: Date,
