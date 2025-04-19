@@ -1,5 +1,5 @@
 const Users = require("../models/usersSchema");
-const { CONFLICT, SERVER_ERROR } = require("../config/errors");
+const { CONFLICT, SERVER_ERROR, BAD_REQUEST } = require("../config/errors");
 const { MESSAGE } = require("../config/constants");
 const { hash } = require("../config/utils");
 
@@ -14,12 +14,17 @@ async function registerUser(req, callback) {
     }
     query = req;
     query.password = await hash(req.password);
-    await Users.create(query);
-
-    return callback(null, {
-      message: MESSAGE.USER_CREATED,
-      data: {},
-    });
+    let res = await Users.create(query);
+    if (res.email === req.email)
+      return callback(null, {
+        message: MESSAGE.USER_CREATED,
+        data: {},
+      });
+    else
+      return callback(
+        BAD_REQUEST("User registration failed. Please try again."),
+        null
+      );
   } catch (error) {
     return callback(
       SERVER_ERROR("User registration failed. Please try again."),
