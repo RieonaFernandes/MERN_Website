@@ -28,6 +28,8 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (process.env.ENV !== "test") {
+  startServer();
+}
 
 module.exports = app;

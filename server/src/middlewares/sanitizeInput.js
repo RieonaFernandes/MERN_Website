@@ -23,7 +23,10 @@ function sanitizeRegInput(data) {
   }
 
   if (data.role) sanitized.role = validator.escape(data.role.trim());
-  if (data.phone) sanitized.phone = data.phone.replace(/[^\d+\- ]/g, "");
+  if (data.phone)
+    sanitized.phone = data.phone
+      .replace(/^(\(?\+\d+\)?[-\s]*)/, "")
+      ?.replace(/[^\d]/g, "");
   if (data.countryCode) sanitized.countryCode = data.countryCode.trim();
 
   return sanitized;
