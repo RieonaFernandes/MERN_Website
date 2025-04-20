@@ -1,7 +1,12 @@
 const Users = require("../models/usersSchema");
-const { CONFLICT, SERVER_ERROR, BAD_REQUEST } = require("../config/errors");
+const {
+  CONFLICT,
+  SERVER_ERROR,
+  BAD_REQUEST,
+  NOT_AUTHERIZED,
+} = require("../config/errors");
 const { MESSAGE } = require("../config/constants");
-const { hash } = require("../config/utils");
+const { hash, compareHash } = require("../config/utils");
 
 async function registerUser(req, callback) {
   try {
@@ -20,17 +25,44 @@ async function registerUser(req, callback) {
         message: MESSAGE.USER_CREATED,
         data: {},
       });
-    else
-      return callback(
-        BAD_REQUEST("User registration failed. Please try again."),
-        null
-      );
+    else return callback(BAD_REQUEST(MESSAGE.USER_REG_FAILED), null);
   } catch (error) {
-    return callback(
-      SERVER_ERROR("User registration failed. Please try again."),
-      null
-    );
+    return callback(SERVER_ERROR(MESSAGE.USER_REG_FAILED), null);
   }
 }
 
-module.exports = { registerUser };
+async function loginUser(req, callback) {
+  try {
+    const { email, password } = req.body;
+    const user = await Users.findOne({ email });
+
+    if (!user) return callback(NOT_AUTHERIZED(MESSAGE.LOGIN_FAILED), null);
+
+    const isMatch = await compareHash(password, user.password);
+
+    if (!isMatch) return callback(NOT_AUTHERIZED(MESSAGE.LOGIN_FAILED), null);
+
+    let res = await Users.findOneAndUpdate(
+      { email },
+      {
+        $set: {
+          lastLogin: new Date(),
+          isActive: true,
+        },
+      },
+      { new: true }
+    );
+
+    if (res.isActive === true)
+      return callback(null, {
+        message: MESSAGE.LOGIN_SUCCESS,
+        data: { email },
+      });
+    else return callback(BAD_REQUEST(MESSAGE.LOGIN_FAILED), null);
+  } catch (error) {
+    console.log(error);
+    return callback(SERVER_ERROR(MESSAGE.LOGIN_FAILED), null);
+  }
+}
+
+module.exports = { registerUser, loginUser };

@@ -2,7 +2,7 @@ let COLLECTIONS = {
   Users: process.env.ENV + "_collection_" + "users",
 };
 
-let ERROR_TYPES = {
+let STATUS_TYPES = {
   HTTP_ERR: 400, //  bad request to the server
   CONFLICT: 409, //if data already exists
   SUCCESS: 200, //get result success
@@ -22,6 +22,9 @@ let MESSAGE = {
   SUCCESS: "Success",
   USER_EXISTS: "User already exists!",
   USER_CREATED: "User created successfully.",
+  USER_REG_FAILED: "User registration failed. Please try again.",
+  LOGIN_FAILED: "Authentication / Submission has failed.",
+  LOGIN_SUCCESS: "User Logged in successfully.",
 };
 
-module.exports = { COLLECTIONS, ERROR_TYPES, MESSAGE };
+module.exports = { COLLECTIONS, STATUS_TYPES, MESSAGE };

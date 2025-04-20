@@ -44,4 +44,12 @@ function decrypt(encText) {
   }
 }
 
-module.exports = { hash, encrypt, decrypt };
+function compareHash(str, hash) {
+  try {
+    return bcrypt.compare(str, hash);
+  } catch (err) {
+    throw err;
+  }
+}
+
+module.exports = { hash, encrypt, decrypt, compareHash };

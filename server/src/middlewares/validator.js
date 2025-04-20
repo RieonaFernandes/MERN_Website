@@ -69,9 +69,39 @@ async function userRegValidator(req, res, next) {
   next();
 }
 
-function sanitizeMiddleware(req, res, next) {
+async function userLoginValidator(req, res, next) {
+  const { email, password } = req.body;
+
+  if (
+    !email ||
+    typeof email !== "string" ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ) {
+    return next(BAD_REQUEST("Validation error: Invalid or missing email"));
+  }
+
+  if (
+    !password ||
+    typeof password !== "string" ||
+    !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password)
+  ) {
+    return next(
+      BAD_REQUEST(
+        "Validation error: Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a special character"
+      )
+    );
+  }
+
+  next();
+}
+
+function sanitizeRegMiddleware(req, res, next) {
   req.body = sanitizeRegInput(req.body);
   next();
 }
 
-module.exports = { userRegValidator, sanitizeMiddleware };
+module.exports = {
+  userRegValidator,
+  sanitizeRegMiddleware,
+  userLoginValidator,
+};
