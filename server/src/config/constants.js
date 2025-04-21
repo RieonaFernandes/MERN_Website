@@ -11,7 +11,7 @@ let STATUS_TYPES = {
   HTTP_POST_S: 201, //post request succcess
   DB_ERR: 500, //Error in database
   NOT_FOUND: 404, //if data is not present
-  NOT_AUTHERIZED: 401, //user is not authorised to access the api
+  NOT_AUTHORIZED: 401, //user is not authorised to access the api
   FORBIDDEN: 403, //forbidden
   NO_RECORDS: 404, //no records found
   BAD_REQUEST: 400, //bad request

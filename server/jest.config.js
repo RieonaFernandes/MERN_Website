@@ -6,7 +6,7 @@ const coveragePathIgnorePatterns = [
   "/config/",
   "/middlewares/",
 ];
-const testTimeout = 20000;
+const testTimeout = 15000;
 
 module.exports = {
   testEnvironment,

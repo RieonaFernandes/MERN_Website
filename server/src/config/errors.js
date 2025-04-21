@@ -21,13 +21,13 @@ const SERVER_ERROR = (message, additionalData) =>
 const CONFLICT = (message, additionalData) =>
   new AppError("CONFLICT", message, additionalData);
 
-const NOT_AUTHERIZED = (message, additionalData) =>
-  new AppError("NOT_AUTHERIZED", message, additionalData);
+const NOT_AUTHORIZED = (message, additionalData) =>
+  new AppError("NOT_AUTHORIZED", message, additionalData);
 
 module.exports = {
   BAD_REQUEST,
   NOT_FOUND,
   SERVER_ERROR,
   CONFLICT,
-  NOT_AUTHERIZED,
+  NOT_AUTHORIZED,
 };

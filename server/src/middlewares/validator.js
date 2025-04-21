@@ -84,7 +84,21 @@ async function userRegValidator(req, res, next) {
 
 async function userLoginValidator(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email, password, deviceId, deviceType } = req.body;
+
+    if (
+      deviceId &&
+      (typeof deviceId !== "string" || /[^a-zA-Z0-9]/.test(deviceId))
+    ) {
+      return next(BAD_REQUEST(MESSAGE.LOGIN_FAILED));
+    }
+
+    if (
+      deviceType &&
+      (typeof deviceType !== "string" || /[^a-zA-Z0-9]/.test(deviceType))
+    ) {
+      return next(BAD_REQUEST(MESSAGE.LOGIN_FAILED));
+    }
 
     if (
       !email ||

@@ -3,7 +3,7 @@ const { decrypt } = require("../config/utils");
 const { SERVER_ERROR } = require("../config/errors");
 const { MESSAGE } = require("../config/constants");
 
-function sanitizeRegInput(data) {
+function sanitizeRegInput(data, next) {
   const sanitized = {};
   try {
     if (data.firstName)
@@ -30,7 +30,10 @@ function sanitizeRegInput(data) {
         .replace(/^(\(?\+\d+\)?[-\s]*)/, "")
         ?.replace(/[^\d]/g, "");
     if (data.countryCode) sanitized.countryCode = data.countryCode.trim();
-
+    if (data.deviceId)
+      sanitized.deviceId = validator.escape(data.deviceId.trim());
+    if (data.deviceType)
+      sanitized.deviceType = validator.escape(data.deviceType.trim());
     return sanitized;
   } catch (err) {
     return next(SERVER_ERROR(MESSAGE.LOGIN_FAILED));

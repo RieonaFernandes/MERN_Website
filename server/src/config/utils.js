@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const { SERVER_ERROR } = require("../config/errors");
+const { MESSAGE } = require("../config/constants");
 
 const secretKey = CryptoJS.enc.Hex.parse(process.env.AES_SECRET_KEY);
 const iv = CryptoJS.enc.Hex.parse(process.env.AES_IV);
@@ -12,7 +14,7 @@ async function hash(str) {
     const hashedPassword = await bcrypt.hash(str, saltRounds);
     return hashedPassword;
   } catch (err) {
-    throw err;
+    throw SERVER_ERROR(MESSAGE.USER_REG_FAILED);
   }
 }
 
@@ -26,7 +28,7 @@ function encrypt(plainText) {
     const encStr = encrypted.ciphertext.toString(CryptoJS.enc.Hex);
     return encStr;
   } catch (err) {
-    throw err;
+    throw SERVER_ERROR(MESSAGE.LOGIN_FAILED);
   }
 }
 
@@ -41,7 +43,7 @@ function decrypt(encText) {
     let decrypted = decipher.toString(CryptoJS.enc.Utf8);
     return decrypted;
   } catch (err) {
-    throw err;
+    throw SERVER_ERROR(MESSAGE.LOGIN_FAILED);
   }
 }
 
@@ -49,7 +51,7 @@ function compareHash(str, hash) {
   try {
     return bcrypt.compare(str, hash);
   } catch (err) {
-    throw err;
+    throw SERVER_ERROR(MESSAGE.LOGIN_FAILED);
   }
 }
 
@@ -59,7 +61,7 @@ function generateToken(userData, key, expiresIn) {
       expiresIn: expiresIn,
     });
   } catch (err) {
-    throw err;
+    throw SERVER_ERROR(MESSAGE.LOGIN_FAILED);
   }
 }
 

@@ -4,7 +4,7 @@ const {
   CONFLICT,
   SERVER_ERROR,
   BAD_REQUEST,
-  NOT_AUTHERIZED,
+  NOT_AUTHORIZED,
 } = require("../config/errors");
 const { MESSAGE } = require("../config/constants");
 const {
@@ -44,21 +44,23 @@ async function loginUser(req, callback) {
     const { email, password, deviceId, deviceType } = req.body;
     const user = await Users.findOne({ email });
 
-    if (!user) return callback(NOT_AUTHERIZED(MESSAGE.LOGIN_FAILED), null);
+    if (!user) return callback(NOT_AUTHORIZED(MESSAGE.LOGIN_FAILED), null);
 
     const isMatch = await compareHash(password, user.password);
 
-    if (!isMatch) return callback(NOT_AUTHERIZED(MESSAGE.LOGIN_FAILED), null);
+    if (!isMatch) {
+      return callback(NOT_AUTHORIZED(MESSAGE.LOGIN_FAILED), null);
+    }
     let accessToken = encrypt(
       generateToken(
-        { userId: Users._id, userId: Users.firstName },
+        { userId: user._id, userId: Users.firstName },
         process.env.JWT_SECRET_KEY,
         process.env.JWT_TOKEN_EXPIRY
       )
     );
     let refreshToken = encrypt(
       generateToken(
-        { userId: Users._id },
+        { userId: user._id },
         process.env.JWT_REFRESH_KEY,
         process.env.REFRESH_TOKEN_EXPIRY
       )
@@ -73,7 +75,8 @@ async function loginUser(req, callback) {
         process.env.REFRESH_TOKEN_EXPIRY[1]
       )
       .toDate();
-    let userId = encrypt(Users._id);
+
+    let userId = encrypt(user._id.toString());
 
     let res = await Users.findOneAndUpdate(
       { email },
@@ -89,9 +92,10 @@ async function loginUser(req, callback) {
       },
       { new: true }
     );
+
     if (res.isActive === true) {
       await Tokens.create({
-        userId: Users._id,
+        userId: user._id,
         deviceId: deviceId,
         deviceType: deviceType,
         accessToken: accessToken,
@@ -112,7 +116,6 @@ async function loginUser(req, callback) {
       });
     } else return callback(BAD_REQUEST(MESSAGE.LOGIN_FAILED), null);
   } catch (error) {
-    console.log(error);
     return callback(SERVER_ERROR(MESSAGE.LOGIN_FAILED), null);
   }
 }
