@@ -3,14 +3,33 @@ const router = express.Router();
 const userService = require("../services/userService");
 const {
   userRegValidator,
-  sanitizeMiddleware,
+  sanitizeRegMiddleware,
+  userLoginValidator,
+  sanitizeUserReqMiddleware,
+  userProfileValidator,
 } = require("../middlewares/validator");
+const { authenticateAccessToken } = require("../config/utils");
 
 router.post(
   "/user/register",
-  sanitizeMiddleware,
+  sanitizeRegMiddleware,
   userRegValidator,
   userService.registerUser
+);
+
+router.post(
+  "/user/login",
+  sanitizeRegMiddleware,
+  userLoginValidator,
+  userService.loginUser
+);
+
+router.get(
+  "/user/:id",
+  sanitizeUserReqMiddleware,
+  userProfileValidator,
+  authenticateAccessToken,
+  userService.getUser
 );
 
 module.exports = router;

@@ -48,6 +48,18 @@ const usersSchema = new Schema(
     lastLogin: {
       type: Date,
     },
+    accessToken: {
+      type: String,
+    },
+    accessTokenExpTime: {
+      type: Date,
+    },
+    refreshToken: {
+      type: String,
+    },
+    refreshTokenExpTime: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

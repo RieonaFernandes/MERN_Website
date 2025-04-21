@@ -1,9 +1,9 @@
-const { ERROR_TYPES } = require("./constants");
+const { STATUS_TYPES } = require("./constants");
 
 class AppError extends Error {
   constructor(type, message, additionalData = {}) {
     super(message);
-    this.code = ERROR_TYPES[type] || 500; // Defaults to 500 if type is not found
+    this.code = STATUS_TYPES[type] || 500; // Defaults to 500 if type is not found
     this.details = { message, ...additionalData };
   }
 }
@@ -21,9 +21,17 @@ const SERVER_ERROR = (message, additionalData) =>
 const CONFLICT = (message, additionalData) =>
   new AppError("CONFLICT", message, additionalData);
 
+const NOT_AUTHORIZED = (message, additionalData) =>
+  new AppError("NOT_AUTHORIZED", message, additionalData);
+
+const FORBIDDEN = (message, additionalData) =>
+  new AppError("FORBIDDEN", message, additionalData);
+
 module.exports = {
   BAD_REQUEST,
   NOT_FOUND,
   SERVER_ERROR,
   CONFLICT,
+  NOT_AUTHORIZED,
+  FORBIDDEN,
 };
