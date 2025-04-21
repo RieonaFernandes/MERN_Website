@@ -3,8 +3,22 @@ require("dotenv").config();
 const mongoDbConnection = require("./config/mongoDbConnection");
 const routes = require("./routes/userRoute");
 const errors = require("./middlewares/errorHandler");
+const requestLogger = require("./middlewares/requestLogger");
+const cors = require("cors");
 
 const app = express();
+const corsOptions = {
+  origin: process.env.URLs.split(","), // restrict access
+  methods: ["GET", "POST", "OPTIONS"], // allow only GET requests
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+
+app.use(requestLogger);
+app.use(cors(corsOptions));
+
 const port = process.env.PORT || 8080;
 
 app.use(express.json());
