@@ -53,7 +53,7 @@ async function loginUser(req, callback) {
     }
     let accessToken = encrypt(
       generateToken(
-        { userId: user._id, userId: Users.firstName },
+        { userId: user._id, firstName: user.firstName },
         process.env.JWT_SECRET_KEY,
         process.env.JWT_TOKEN_EXPIRY
       )
@@ -61,7 +61,7 @@ async function loginUser(req, callback) {
     let refreshToken = encrypt(
       generateToken(
         { userId: user._id },
-        process.env.JWT_REFRESH_KEY,
+        process.env.JWT_SECRET_KEY,
         process.env.REFRESH_TOKEN_EXPIRY
       )
     );
@@ -120,4 +120,20 @@ async function loginUser(req, callback) {
   }
 }
 
-module.exports = { registerUser, loginUser };
+async function getUser(req, callback) {
+  try {
+    let userData = await Users.findOne(
+      { _id: req.params.id },
+      { firstName: 1, lastName: 1, email: 1, phone: 1, countryCode: 1 }
+    );
+    if (userData) {
+      return callback(null, {
+        message: MESSAGE.SUCCESS,
+        data: userData,
+      });
+    } else return callback(BAD_REQUEST(MESSAGE.DATA_NOT_FOUND), null);
+  } catch (error) {
+    return callback(SERVER_ERROR(MESSAGE.LOGIN_FAILED), null);
+  }
+}
+module.exports = { registerUser, loginUser, getUser };

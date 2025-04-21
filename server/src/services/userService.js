@@ -34,4 +34,19 @@ async function loginUser(req, res) {
   });
 }
 
-module.exports = { registerUser, loginUser };
+async function getUser(req, res) {
+  userController.getUser(req, (err, data) => {
+    if (err) {
+      return res.status(err?.code || 500).json(err);
+    }
+    return res.json({
+      code: STATUS_TYPES.SUCCESS,
+      details: {
+        message: data.message,
+        data: data.data,
+      },
+      timestamp: new Date().toISOString(),
+    });
+  });
+}
+module.exports = { registerUser, loginUser, getUser };

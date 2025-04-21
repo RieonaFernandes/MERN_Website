@@ -1,5 +1,8 @@
 const { BAD_REQUEST, SERVER_ERROR } = require("../config/errors");
-const { sanitizeRegInput } = require("../middlewares/sanitizeInput");
+const {
+  sanitizeRegInput,
+  sanitizeUserReqInput,
+} = require("../middlewares/sanitizeInput");
 const { MESSAGE } = require("../config/constants");
 
 async function userRegValidator(req, res, next) {
@@ -122,9 +125,31 @@ async function userLoginValidator(req, res, next) {
   }
 }
 
+async function userProfileValidator(req, res, next) {
+  try {
+    const { id } = req.params;
+    if (!id || typeof id !== "string" || /[^a-zA-Z0-9]/.test(id)) {
+      return next(BAD_REQUEST(MESSAGE.LOGIN_FAILED));
+    }
+
+    next();
+  } catch (err) {
+    return next(SERVER_ERROR(MESSAGE.LOGIN_FAILED));
+  }
+}
+
 function sanitizeRegMiddleware(req, res, next) {
   try {
     req.body = sanitizeRegInput(req.body);
+    next();
+  } catch (err) {
+    return next(SERVER_ERROR(MESSAGE.LOGIN_FAILED));
+  }
+}
+
+function sanitizeUserReqMiddleware(req, res, next) {
+  try {
+    req.params = sanitizeUserReqInput(req.params);
     next();
   } catch (err) {
     return next(SERVER_ERROR(MESSAGE.LOGIN_FAILED));
@@ -135,4 +160,6 @@ module.exports = {
   userRegValidator,
   sanitizeRegMiddleware,
   userLoginValidator,
+  sanitizeUserReqMiddleware,
+  userProfileValidator,
 };

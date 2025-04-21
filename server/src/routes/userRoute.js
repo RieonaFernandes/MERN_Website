@@ -5,7 +5,10 @@ const {
   userRegValidator,
   sanitizeRegMiddleware,
   userLoginValidator,
+  sanitizeUserReqMiddleware,
+  userProfileValidator,
 } = require("../middlewares/validator");
+const { authenticateAccessToken } = require("../config/utils");
 
 router.post(
   "/user/register",
@@ -19,6 +22,14 @@ router.post(
   sanitizeRegMiddleware,
   userLoginValidator,
   userService.loginUser
+);
+
+router.get(
+  "/user/:id",
+  sanitizeUserReqMiddleware,
+  userProfileValidator,
+  authenticateAccessToken,
+  userService.getUser
 );
 
 module.exports = router;

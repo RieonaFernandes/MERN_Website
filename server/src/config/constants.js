@@ -27,6 +27,7 @@ let MESSAGE = {
   LOGIN_FAILED: "Authentication / Submission has failed.",
   LOGIN_SUCCESS: "User Logged in successfully.",
   VALIDATION_ERROR: "Authentication Failed",
+  DATA_NOT_FOUND: "Data not found.",
 };
 
 module.exports = { COLLECTIONS, STATUS_TYPES, MESSAGE };

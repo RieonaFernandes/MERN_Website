@@ -24,10 +24,14 @@ const CONFLICT = (message, additionalData) =>
 const NOT_AUTHORIZED = (message, additionalData) =>
   new AppError("NOT_AUTHORIZED", message, additionalData);
 
+const FORBIDDEN = (message, additionalData) =>
+  new AppError("FORBIDDEN", message, additionalData);
+
 module.exports = {
   BAD_REQUEST,
   NOT_FOUND,
   SERVER_ERROR,
   CONFLICT,
   NOT_AUTHORIZED,
+  FORBIDDEN,
 };

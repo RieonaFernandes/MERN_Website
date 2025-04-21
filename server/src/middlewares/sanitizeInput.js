@@ -39,5 +39,16 @@ function sanitizeRegInput(data, next) {
     return next(SERVER_ERROR(MESSAGE.LOGIN_FAILED));
   }
 }
-
-module.exports = { sanitizeRegInput };
+function sanitizeUserReqInput(data, next) {
+  const sanitized = {};
+  try {
+    if (data.id) {
+      data.id = decrypt(data.id);
+      sanitized.id = validator.escape(data.id.trim());
+    }
+    return sanitized;
+  } catch (err) {
+    return next(SERVER_ERROR(MESSAGE.LOGIN_FAILED));
+  }
+}
+module.exports = { sanitizeRegInput, sanitizeUserReqInput };

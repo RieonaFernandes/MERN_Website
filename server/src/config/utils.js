@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const { SERVER_ERROR } = require("../config/errors");
+const { SERVER_ERROR, NOT_AUTHORIZED, FORBIDDEN } = require("../config/errors");
 const { MESSAGE } = require("../config/constants");
 
 const secretKey = CryptoJS.enc.Hex.parse(process.env.AES_SECRET_KEY);
@@ -65,4 +65,31 @@ function generateToken(userData, key, expiresIn) {
   }
 }
 
-module.exports = { hash, encrypt, decrypt, compareHash, generateToken };
+function authenticateAccessToken(req, res, next) {
+  try {
+    const authHeader = req.headers["authorization"];
+    let token = authHeader && authHeader.split(" ")[1];
+    token = decrypt(token);
+
+    if (!token) throw NOT_AUTHORIZED(MESSAGE.LOGIN_FAILED);
+
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, userData) => {
+      if (err) throw FORBIDDEN(MESSAGE.LOGIN_FAILED);
+      if (req.params.id !== userData.userId) {
+        throw FORBIDDEN(MESSAGE.LOGIN_FAILED);
+      }
+      next();
+    });
+  } catch (err) {
+    throw SERVER_ERROR(MESSAGE.LOGIN_FAILED);
+  }
+}
+
+module.exports = {
+  hash,
+  encrypt,
+  decrypt,
+  compareHash,
+  generateToken,
+  authenticateAccessToken,
+};

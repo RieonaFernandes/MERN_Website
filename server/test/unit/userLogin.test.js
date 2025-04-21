@@ -144,7 +144,6 @@ describe("Login Controller", () => {
     jest.clearAllMocks();
     process.env.JWT_SECRET_KEY = "secret";
     process.env.JWT_TOKEN_EXPIRY = "1h";
-    process.env.JWT_REFRESH_KEY = "refresh-secret";
     process.env.REFRESH_TOKEN_EXPIRY = "7d";
   });
 
