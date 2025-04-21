@@ -1,4 +1,5 @@
 const Users = require("../models/usersSchema");
+const Tokens = require("../models/userTokens");
 const {
   CONFLICT,
   SERVER_ERROR,
@@ -6,7 +7,14 @@ const {
   NOT_AUTHERIZED,
 } = require("../config/errors");
 const { MESSAGE } = require("../config/constants");
-const { hash, compareHash } = require("../config/utils");
+const {
+  hash,
+  compareHash,
+  generateToken,
+  encrypt,
+} = require("../config/utils");
+const moment = require("moment");
+require("dotenv").config();
 
 async function registerUser(req, callback) {
   try {
@@ -33,7 +41,7 @@ async function registerUser(req, callback) {
 
 async function loginUser(req, callback) {
   try {
-    const { email, password } = req.body;
+    const { email, password, deviceId, deviceType } = req.body;
     const user = await Users.findOne({ email });
 
     if (!user) return callback(NOT_AUTHERIZED(MESSAGE.LOGIN_FAILED), null);
@@ -41,6 +49,31 @@ async function loginUser(req, callback) {
     const isMatch = await compareHash(password, user.password);
 
     if (!isMatch) return callback(NOT_AUTHERIZED(MESSAGE.LOGIN_FAILED), null);
+    let accessToken = encrypt(
+      generateToken(
+        { userId: Users._id, userId: Users.firstName },
+        process.env.JWT_SECRET_KEY,
+        process.env.JWT_TOKEN_EXPIRY
+      )
+    );
+    let refreshToken = encrypt(
+      generateToken(
+        { userId: Users._id },
+        process.env.JWT_REFRESH_KEY,
+        process.env.REFRESH_TOKEN_EXPIRY
+      )
+    );
+    let accessTokenExpTime = moment(new Date())
+      .add(process.env.JWT_TOKEN_EXPIRY[0], process.env.JWT_TOKEN_EXPIRY[1])
+      .toDate();
+
+    let refreshTokenExpTime = moment(new Date())
+      .add(
+        process.env.REFRESH_TOKEN_EXPIRY[0],
+        process.env.REFRESH_TOKEN_EXPIRY[1]
+      )
+      .toDate();
+    let userId = encrypt(Users._id);
 
     let res = await Users.findOneAndUpdate(
       { email },
@@ -48,17 +81,36 @@ async function loginUser(req, callback) {
         $set: {
           lastLogin: new Date(),
           isActive: true,
+          accessToken: accessToken,
+          accessTokenExpTime: accessTokenExpTime,
+          refreshToken: refreshToken,
+          refreshTokenExpTime: refreshTokenExpTime,
         },
       },
       { new: true }
     );
-
-    if (res.isActive === true)
+    if (res.isActive === true) {
+      await Tokens.create({
+        userId: Users._id,
+        deviceId: deviceId,
+        deviceType: deviceType,
+        accessToken: accessToken,
+        accessTokenExpTime: accessTokenExpTime,
+        refreshToken: refreshToken,
+        refreshTokenExpTime: refreshTokenExpTime,
+      });
       return callback(null, {
         message: MESSAGE.LOGIN_SUCCESS,
-        data: { email },
+        data: {
+          userId,
+          email,
+          accessToken,
+          accessTokenExpTime,
+          refreshToken,
+          refreshTokenExpTime,
+        },
       });
-    else return callback(BAD_REQUEST(MESSAGE.LOGIN_FAILED), null);
+    } else return callback(BAD_REQUEST(MESSAGE.LOGIN_FAILED), null);
   } catch (error) {
     console.log(error);
     return callback(SERVER_ERROR(MESSAGE.LOGIN_FAILED), null);

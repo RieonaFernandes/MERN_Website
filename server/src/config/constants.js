@@ -1,5 +1,6 @@
 let COLLECTIONS = {
   Users: process.env.ENV + "_collection_" + "users",
+  Tokens: process.env.ENV + "_collection_" + "tokens",
 };
 
 let STATUS_TYPES = {
@@ -25,6 +26,7 @@ let MESSAGE = {
   USER_REG_FAILED: "User registration failed. Please try again.",
   LOGIN_FAILED: "Authentication / Submission has failed.",
   LOGIN_SUCCESS: "User Logged in successfully.",
+  VALIDATION_ERROR: "Authentication Failed",
 };
 
 module.exports = { COLLECTIONS, STATUS_TYPES, MESSAGE };

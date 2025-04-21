@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const CryptoJS = require("crypto-js");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
 const secretKey = CryptoJS.enc.Hex.parse(process.env.AES_SECRET_KEY);
 const iv = CryptoJS.enc.Hex.parse(process.env.AES_IV);
@@ -52,4 +53,14 @@ function compareHash(str, hash) {
   }
 }
 
-module.exports = { hash, encrypt, decrypt, compareHash };
+function generateToken(userData, key, expiresIn) {
+  try {
+    return jwt.sign(userData, key, {
+      expiresIn: expiresIn,
+    });
+  } catch (err) {
+    throw err;
+  }
+}
+
+module.exports = { hash, encrypt, decrypt, compareHash, generateToken };
