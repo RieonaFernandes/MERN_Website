@@ -126,6 +126,9 @@ async function getUser(req, callback) {
       { _id: req.params.id },
       { firstName: 1, lastName: 1, email: 1, phone: 1, countryCode: 1 }
     );
+    userData.lastName = encrypt(userData.lastName);
+    userData.email = encrypt(userData.email);
+    userData.phone = encrypt(userData.phone);
     if (userData) {
       return callback(null, {
         message: MESSAGE.SUCCESS,
