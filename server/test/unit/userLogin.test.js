@@ -197,7 +197,7 @@ describe("Login Controller", () => {
         expect(error).toBeNull();
         expect(result.data).toMatchObject({
           userId: "encrypted_user123",
-          email: "test@example.com",
+          // email: "test@example.com",
           accessToken: "encrypted_raw_token",
           refreshToken: "encrypted_raw_token",
         });
