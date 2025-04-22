@@ -5,6 +5,7 @@ const routes = require("./routes/userRoute");
 const errors = require("./middlewares/errorHandler");
 const requestLogger = require("./middlewares/requestLogger");
 const cors = require("cors");
+const swaggerDocs = require("./config/swaggerConfig");
 
 const app = express();
 const corsOptions = {
@@ -36,6 +37,8 @@ const startServer = async () => {
     app.listen(port, () => {
       console.log(`Server is running on ${process.env.HOST}:${port}`);
     });
+    swaggerDocs(app, port);
+    console.log(`OpenAPI Docs available at ${process.env.HOST}:${port}/docs`);
   } catch (error) {
     console.error("Failed to start server:", error);
     process.exit(1);

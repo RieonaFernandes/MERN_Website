@@ -107,7 +107,7 @@ async function loginUser(req, callback) {
         message: MESSAGE.LOGIN_SUCCESS,
         data: {
           userId,
-          email,
+          // email,
           accessToken,
           accessTokenExpTime,
           refreshToken,
