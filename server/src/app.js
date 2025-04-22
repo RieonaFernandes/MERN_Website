@@ -3,9 +3,10 @@ require("dotenv").config();
 const mongoDbConnection = require("./config/mongoDbConnection");
 const routes = require("./routes/userRoute");
 const errors = require("./middlewares/errorHandler");
-const requestLogger = require("./middlewares/requestLogger");
+// const requestLogger = require("./middlewares/requestLogger");
 const cors = require("cors");
 const swaggerDocs = require("./config/swaggerConfig");
+const { morganMiddleware } = require("./middlewares/morgan");
 
 const app = express();
 const corsOptions = {
@@ -17,7 +18,8 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-app.use(requestLogger);
+// app.use(requestLogger);
+app.use(morganMiddleware);
 app.use(cors(corsOptions));
 
 const port = process.env.PORT || 8080;
