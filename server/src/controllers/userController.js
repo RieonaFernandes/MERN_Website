@@ -124,7 +124,14 @@ async function getUser(req, callback) {
   try {
     let userData = await Users.findOne(
       { _id: req.params.id },
-      { firstName: 1, lastName: 1, email: 1, phone: 1, countryCode: 1 }
+      {
+        firstName: 1,
+        lastName: 1,
+        middleName: 1,
+        email: 1,
+        phone: 1,
+        countryCode: 1,
+      }
     );
     userData.lastName = encrypt(userData.lastName);
     userData.email = encrypt(userData.email);

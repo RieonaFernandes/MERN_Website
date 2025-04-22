@@ -58,7 +58,7 @@ const AuthPage = () => {
       }
 
       if (formData.middleName.trim() && !nameRegex.test(formData.middleName)) {
-        newErrors.lastName = "Last name should contain only letters";
+        newErrors.middleName = "Middle name should contain only letters";
       }
 
       const phoneRegex = /^\d+$/;
@@ -109,6 +109,7 @@ const AuthPage = () => {
           ? {}
           : {
               firstName: formData.firstName,
+              middleName: formData.middleName,
               lastName: encryptedLastName,
             }),
         email: encryptedEmail,

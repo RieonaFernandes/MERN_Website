@@ -32,6 +32,7 @@ const Profile = () => {
         setUserData(data.details.data);
         setEditedData({
           firstName: data.details.data.firstName,
+          middleName: data.details.data?.middleName || "",
           lastName: decrypt(data.details.data.lastName),
           phone: decrypt(data.details.data.phone) || "",
           countryCode: data.details.data.countryCode || "",
@@ -171,6 +172,25 @@ const Profile = () => {
                   value={editedData.firstName}
                   onChange={(e) =>
                     setEditedData({ ...editedData, firstName: e.target.value })
+                  }
+                  disabled={!isEditing}
+                  className={`w-full p-2 rounded-lg ${
+                    !isEditing
+                      ? "bg-gray-100 cursor-not-allowed"
+                      : "bg-white border"
+                  }`}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Middle Name
+                </label>
+                <input
+                  type="text"
+                  value={editedData.middleName}
+                  onChange={(e) =>
+                    setEditedData({ ...editedData, middleName: e.target.value })
                   }
                   disabled={!isEditing}
                   className={`w-full p-2 rounded-lg ${
