@@ -2,7 +2,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Outlet,
   Navigate,
 } from "react-router-dom";
 import { lazy, Suspense } from "react";
@@ -14,13 +13,15 @@ const About = lazy(() => import("./pages/About"));
 const Profile = lazy(() => import("./pages/Profile"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
 const ErrorBoundary = lazy(() => import("./components/ErrorBoundary"));
+
 // Update authentication check
 const isAuthenticated = () => {
   return isTokenValid();
 };
 
-const ProtectedRoute = () => {
-  return isAuthenticated() ? <Outlet /> : <Navigate to="/" replace />;
+// Protected Route component
+const ProtectedRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/" replace />;
 };
 
 function App() {
@@ -59,8 +60,8 @@ function App() {
                     </>
                   }
                 />
-                <Route path="*" element={<Navigate to="/" replace />} />
               </Route>
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </ErrorBoundary>
         </Suspense>

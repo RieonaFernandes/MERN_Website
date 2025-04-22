@@ -144,7 +144,7 @@ const AuthPage = () => {
         const { accessToken, userId, accessTokenExpTime } = data.details.data;
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("userId", userId);
-        localStorage.setItem("accessTokenExp", accessTokenExpTime);
+        // localStorage.setItem("accessTokenExp", accessTokenExpTime);
         navigate("/home");
         // navigate(location.state?.from?.pathname || "/home");
       } else {
@@ -186,6 +186,14 @@ const AuthPage = () => {
     });
     setErrors({});
   }, [isLogin]);
+
+  useEffect(() => {
+    return () => {
+      // Clear errors when component unmounts
+      setErrors({});
+      setLoading(false);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">

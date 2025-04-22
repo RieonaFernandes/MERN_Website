@@ -1,4 +1,5 @@
 import CryptoJS from "crypto-js";
+import { jwtDecode } from "jwt-decode";
 
 const secretKeyVal = import.meta.env.VITE_AES_SECRET_KEY;
 const ivVal = import.meta.env.VITE_AES_IV;
@@ -30,5 +31,24 @@ export function decrypt(encText) {
     return decipher.toString(CryptoJS.enc.Utf8);
   } catch (err) {
     throw new Error("Authentication failed");
+  }
+}
+
+export function isTokenValid() {
+  const token = localStorage.getItem("accessToken");
+
+  if (!token) return false;
+  try {
+    const decodedToken = jwtDecode(decrypt(token));
+    const currentTime = Date.now() / 1000;
+
+    // Check if token will expire in next 5 minutes
+    const bufferTime = 300; // 5 minutes in seconds
+
+    return decodedToken.exp > currentTime + bufferTime;
+  } catch (error) {
+    console.error("Token validation failed:", error);
+    localStorage.removeItem("accessToken");
+    return false;
   }
 }
