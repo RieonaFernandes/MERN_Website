@@ -41,7 +41,7 @@ function App() {
                     </>
                   }
                 />
-                <Route
+                {/* <Route
                   path="/about"
                   element={
                     <>
@@ -49,7 +49,7 @@ function App() {
                       <About />
                     </>
                   }
-                />
+                /> */}
                 <Route
                   path="/profile"
                   element={

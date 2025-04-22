@@ -16,7 +16,7 @@ export default function Navigation() {
           <div className="hidden md:block">
             <ul className="ml-4 flex items-center space-x-2">
               <NavItem to="/home" text="Home" />
-              <NavItem to="/about" text="About Us" />
+              {/* <NavItem to="/about" text="About Us" /> */}
               <NavItem to="/profile" text="Profile" />
             </ul>
           </div>
@@ -62,11 +62,11 @@ export default function Navigation() {
             text="Home"
             onClick={() => setIsOpen(false)}
           />
-          <MobileNavItem
+          {/* <MobileNavItem
             to="/about"
             text="About Us"
             onClick={() => setIsOpen(false)}
-          />
+          /> */}
           <MobileNavItem
             to="/profile"
             text="Profile"

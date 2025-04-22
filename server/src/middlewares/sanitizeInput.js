@@ -17,7 +17,12 @@ function sanitizeRegInput(data, next) {
 
     if (data.email) {
       data.email = decrypt(data.email);
-      sanitized.email = validator.normalizeEmail(data.email.trim());
+      sanitized.email = validator.normalizeEmail(data.email.trim(), {
+        gmail_remove_dots: false,
+        gmail_convert_googlemaildotcom: false,
+        all_lowercase: true,
+        gmail_remove_subaddress: false, // allowed here but queries are parameterized
+      });
     }
     if (data.password) {
       data.password = decrypt(data.password);
