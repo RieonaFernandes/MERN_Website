@@ -21,6 +21,7 @@ Thanks again for reviewing my code!
 2. Have mongodb database setup and running.
 
 3. Use ```.env.example ``` file as a reference to create ```.env``` file and replace the values with your credentials/values.
+   The URLs variable (used in CORS setup) should be replaced with the actual client URL when running locally. for example, ```http://localhost:3000```.
 
 
 ## Installation
