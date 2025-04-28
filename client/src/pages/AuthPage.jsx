@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   FiEye,
   FiEyeOff,
@@ -9,24 +9,22 @@ import {
   FiPhone,
 } from "react-icons/fi";
 import { encrypt } from "../utils/util";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  toggleAuthMode,
+  togglePasswordVisibility,
+  updateFormField,
+  setErrors,
+  setLoading,
+  resetForm,
+  setShowSuccessMsg,
+} from "../features/auth/authSlice";
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showSuccessMsg, setShowSuccessMsg] = useState(false);
-  const [formData, setFormData] = useState({
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    countryCode: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLogin, showPassword, showSuccessMsg, formData, errors, loading } =
+    useSelector((state) => state.auth);
 
   const validateForm = () => {
     const newErrors = {};
@@ -86,7 +84,7 @@ const AuthPage = () => {
       }
     }
 
-    setErrors(newErrors);
+    dispatch(setErrors(newErrors));
     return Object.keys(newErrors).length === 0;
   };
 
@@ -94,7 +92,8 @@ const AuthPage = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setLoading(true);
+    dispatch(setLoading(true));
+
     try {
       const apiUrl = isLogin
         ? `http://localhost:4000/api/v1/user/login`
@@ -150,51 +149,33 @@ const AuthPage = () => {
         // navigate(location.state?.from?.pathname || "/home");
       } else {
         setTimeout(() => {
-          setIsLogin(true);
-          setFormData({
-            firstName: "",
-            middleName: "",
-            lastName: "",
-            email: "",
-            phone: "",
-            countryCode: "",
-            password: "",
-            confirmPassword: "",
-          });
+          dispatch(toggleAuthMode(true));
+          dispatch(resetForm());
         }, 2000);
       }
       if (response.ok && !isLogin) {
         // Handle signup success
-        setShowSuccessMsg(true);
+        dispatch(setShowSuccessMsg(true));
+        dispatch(resetForm());
       }
     } catch (error) {
-      setErrors({ general: error.message });
+      dispatch(setErrors({ general: error.message }));
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
   useEffect(() => {
-    setFormData({
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      countryCode: "",
-      password: "",
-      confirmPassword: "",
-    });
-    setErrors({});
-  }, [isLogin]);
+    dispatch(resetForm());
+  }, [isLogin, dispatch]);
 
   useEffect(() => {
     return () => {
-      // Clear errors when component unmounts
-      setErrors({});
-      setLoading(false);
+      // Cleanup when component unmounts
+      dispatch(setErrors({}));
+      dispatch(setLoading(false));
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -206,8 +187,8 @@ const AuthPage = () => {
               <h3 className="text-2xl font-bold text-green-600">Success!</h3>
               <button
                 onClick={() => {
-                  setShowSuccessMsg(false);
-                  setIsLogin(true);
+                  dispatch(setShowSuccessMsg(false));
+                  dispatch(toggleAuthMode(true)); // Switch back to login
                 }}
                 className="text-gray-500 hover:text-gray-700 cursor-pointer"
               >
@@ -220,8 +201,8 @@ const AuthPage = () => {
             <div className="flex justify-end space-x-4">
               <button
                 onClick={() => {
-                  setShowSuccessMsg(false);
-                  setIsLogin(true);
+                  dispatch(setShowSuccessMsg(false));
+                  dispatch(toggleAuthMode(true));
                 }}
                 className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 cursor-pointer"
               >
@@ -258,7 +239,9 @@ const AuthPage = () => {
                 type="email"
                 value={formData.email}
                 onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
+                  dispatch(
+                    updateFormField({ field: "email", value: e.target.value })
+                  )
                 }
                 className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                   errors.email
@@ -291,10 +274,12 @@ const AuthPage = () => {
                         type="text"
                         value={formData.firstName}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            firstName: e.target.value,
-                          })
+                          dispatch(
+                            updateFormField({
+                              field: "firstName",
+                              value: e.target.value,
+                            })
+                          )
                         }
                         className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                           errors.firstName
@@ -320,7 +305,12 @@ const AuthPage = () => {
                         type="text"
                         value={formData.lastName}
                         onChange={(e) =>
-                          setFormData({ ...formData, lastName: e.target.value })
+                          dispatch(
+                            updateFormField({
+                              field: "lastName",
+                              value: e.target.value,
+                            })
+                          )
                         }
                         className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                           errors.lastName
@@ -347,7 +337,12 @@ const AuthPage = () => {
                       type="text"
                       value={formData.middleName}
                       onChange={(e) =>
-                        setFormData({ ...formData, middleName: e.target.value })
+                        dispatch(
+                          updateFormField({
+                            field: "middleName",
+                            value: e.target.value,
+                          })
+                        )
                       }
                       className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-orange-500"
                     />
@@ -374,10 +369,12 @@ const AuthPage = () => {
                         placeholder="+1"
                         value={formData.countryCode}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            countryCode: e.target.value,
-                          })
+                          dispatch(
+                            updateFormField({
+                              field: "countryCode",
+                              value: e.target.value,
+                            })
+                          )
                         }
                         className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                           errors.countryCode
@@ -406,10 +403,12 @@ const AuthPage = () => {
                         aria-label="Phone number"
                         pattern="[0-9]*"
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            phone: e.target.value.replace(/\D/g, ""),
-                          })
+                          dispatch(
+                            updateFormField({
+                              field: "phone",
+                              value: e.target.value.replace(/\D/g, ""),
+                            })
+                          )
                         }
                         className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                           errors.phone
@@ -441,7 +440,12 @@ const AuthPage = () => {
                   type={showPassword ? "text" : "password"}
                   value={formData.password}
                   onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
+                    dispatch(
+                      updateFormField({
+                        field: "password",
+                        value: e.target.value,
+                      })
+                    )
                   }
                   className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                     errors.password
@@ -452,7 +456,7 @@ const AuthPage = () => {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
+                  onClick={() => dispatch(togglePasswordVisibility())}
                   className="absolute top-3 right-3 text-gray-400 hover:text-orange-500"
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -474,10 +478,12 @@ const AuthPage = () => {
                     type="password"
                     value={formData.confirmPassword}
                     onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        confirmPassword: e.target.value,
-                      })
+                      dispatch(
+                        updateFormField({
+                          field: "confirmPassword",
+                          value: e.target.value,
+                        })
+                      )
                     }
                     className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none ${
                       errors.confirmPassword
@@ -512,7 +518,7 @@ const AuthPage = () => {
                 Don't have an account?{" "}
                 <button
                   type="button"
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => dispatch(toggleAuthMode(false))}
                   className="text-orange-500 hover:text-orange-600 hover:underline"
                 >
                   Sign up
@@ -523,7 +529,7 @@ const AuthPage = () => {
                 Already have an account?{" "}
                 <button
                   type="button"
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => dispatch(toggleAuthMode(true))}
                   className="text-orange-500 hover:text-orange-600 hover:underline"
                 >
                   Sign in
