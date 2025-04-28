@@ -1,5 +1,6 @@
 import CryptoJS from "crypto-js";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const secretKeyVal = import.meta.env.VITE_AES_SECRET_KEY;
 const ivVal = import.meta.env.VITE_AES_IV;
@@ -35,7 +36,7 @@ export function decrypt(encText) {
 }
 
 export function isTokenValid() {
-  const token = localStorage.getItem("accessToken");
+  const token = Cookies.get("accessToken");
 
   if (!token) return false;
   try {
@@ -48,7 +49,8 @@ export function isTokenValid() {
     return decodedToken.exp > currentTime + bufferTime;
   } catch (error) {
     console.error("Token validation failed:", error);
-    localStorage.removeItem("accessToken");
+    Cookies.remove("accessToken");
+    Cookies.remove("userId");
     return false;
   }
 }

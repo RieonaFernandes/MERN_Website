@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import { FiEdit, FiSave, FiUpload } from "react-icons/fi";
 import { decrypt } from "../utils/util";
 const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
+import Cookies from "js-cookie";
 
 const Profile = () => {
-  // const { id } = useParams();
-  const id = localStorage.getItem("userId");
+  const id = Cookies.get("userId");
   const [userData, setUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedData, setEditedData] = useState({});
@@ -18,7 +17,7 @@ const Profile = () => {
       try {
         const response = await fetch(`${baseUrl}/user/${id}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${Cookies.get("accessToken")}`,
           },
         });
 

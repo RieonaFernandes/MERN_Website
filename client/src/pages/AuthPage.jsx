@@ -20,6 +20,7 @@ import {
   setShowSuccessMsg,
 } from "../features/auth/authSlice";
 const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
+import Cookies from "js-cookie";
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -143,9 +144,18 @@ const AuthPage = () => {
       if (response.ok && isLogin) {
         // Handle login success
         const { accessToken, userId, accessTokenExpTime } = data.details.data;
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("userId", userId);
-        // localStorage.setItem("accessTokenExp", accessTokenExpTime);
+
+        Cookies.set("accessToken", accessToken, {
+          expires: new Date(accessTokenExpTime * 1000),
+          secure: true,
+          sameSite: "Strict",
+        });
+
+        Cookies.set("userId", userId, {
+          expires: new Date(accessTokenExpTime * 1000),
+          secure: true,
+          sameSite: "Strict",
+        });
         navigate("/home");
         // navigate(location.state?.from?.pathname || "/home");
       } else {
