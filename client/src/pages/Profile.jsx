@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { FiEdit, FiSave, FiUpload } from "react-icons/fi";
 import { decrypt } from "../utils/util";
+const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
 const Profile = () => {
   // const { id } = useParams();
@@ -15,14 +16,11 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:4000/api/v1/user/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }
-        );
+        const response = await fetch(`${baseUrl}/user/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch user data");

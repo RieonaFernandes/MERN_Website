@@ -19,6 +19,7 @@ import {
   resetForm,
   setShowSuccessMsg,
 } from "../features/auth/authSlice";
+const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -96,8 +97,8 @@ const AuthPage = () => {
 
     try {
       const apiUrl = isLogin
-        ? `http://localhost:4000/api/v1/user/login`
-        : `http://localhost:4000/api/v1/user/register`;
+        ? `${baseUrl}/user/login`
+        : `${baseUrl}/user/register`;
 
       // Encrypt sensitive fields
       const encryptedEmail = encrypt(formData.email);
