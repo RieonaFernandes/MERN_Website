@@ -19,6 +19,10 @@ const isAuthenticated = () => {
   return isTokenValid();
 };
 
+const AuthRedirect = () => {
+  return isAuthenticated() ? <Navigate to="/home" replace /> : <AuthPage />;
+};
+
 const ProtectedRoute = () => {
   return isAuthenticated() ? <Outlet /> : <Navigate to="/" replace />;
 };
@@ -30,7 +34,7 @@ function App() {
         <Suspense fallback={<div>Loading...</div>}>
           <ErrorBoundary>
             <Routes>
-              <Route path="/" element={<AuthPage />} />
+              <Route path="/" element={<AuthRedirect />} />
               <Route element={<ProtectedRoute />}>
                 <Route
                   path="/home"
