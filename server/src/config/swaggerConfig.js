@@ -8,8 +8,8 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Cromwell API",
-      description: "API documentation for the Cromwell",
+      title: "FloQi API",
+      description: "API documentation for the FloQi",
       version: "1.0.0",
     },
     servers: [

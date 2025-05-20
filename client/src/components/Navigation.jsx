@@ -1,15 +1,23 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <nav className="fixed w-full top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <span className="text-2xl font-bold text-orange-500">Cromwell</span>
+            <span className="text-2xl font-bold text-orange-500">
+              <img
+                src={logo}
+                alt="logo"
+                className="w-24 sm:w-26 md:w-28 lg:w-30 h-22 sm:h-24 md:h-26 lg:h-28"
+                loading="eager"
+              />
+            </span>
           </div>
 
           {/* Desktop View Navigation */}
