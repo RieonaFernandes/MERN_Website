@@ -1,17 +1,9 @@
 <div align="center">
 <pre>
 
-<h3>A full-stack MERN web application.</h3>
+<h3>A full-stack MERN web application focused on security.</h3>
 
 </pre>
-<h5>
-Hello Cromwell Team 👋
-<br/>
-Thank you for the opportunity to complete this coding test. <br/>Below you’ll find setup instructions, API documentation, and other relevant details about the project.
-<br/>
-I appreciate your time and consideration.  
-Thanks again for reviewing my code!
-</h5>
 </div>
 
 ## Setup
