@@ -144,7 +144,8 @@ const AuthPage = () => {
 
       if (response.ok && isLogin) {
         // Handle login success
-        const { accessToken, userId, accessTokenExpTime } = data.details.data;
+        const { accessToken, userId, accessTokenExpTime, userName } =
+          data.details.data;
 
         Cookies.set("accessToken", accessToken, {
           expires: new Date(accessTokenExpTime * 1000),
@@ -157,6 +158,13 @@ const AuthPage = () => {
           secure: true,
           sameSite: "Strict",
         });
+
+        Cookies.set("userName", userName, {
+          expires: new Date(accessTokenExpTime * 1000),
+          secure: true,
+          sameSite: "Strict",
+        });
+
         navigate("/home");
         // navigate(location.state?.from?.pathname || "/home");
       } else {

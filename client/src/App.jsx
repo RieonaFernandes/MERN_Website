@@ -5,7 +5,7 @@ import {
   Outlet,
   Navigate,
 } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import Navigation from "./components/Navigation";
 import { isTokenValid } from "./utils/util";
 
@@ -28,6 +28,8 @@ const ProtectedRoute = () => {
 };
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="app-container">
       <Router>
@@ -39,10 +41,25 @@ function App() {
                 <Route
                   path="/home"
                   element={
-                    <>
-                      <Navigation />
-                      <Home />
-                    </>
+                    <div className="relative">
+                      {/* Sidebar Navigation */}
+                      <Navigation
+                        isOpen={isSidebarOpen}
+                        setIsOpen={setIsSidebarOpen}
+                        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                      />
+
+                      {/* Main Content */}
+                      <main
+                        className={`transition-all duration-300 min-h-screen ${
+                          isSidebarOpen ? "md:ml-50" : "md:ml-20"
+                        }`}
+                      >
+                        <div>
+                          <Home />
+                        </div>
+                      </main>
+                    </div>
                   }
                 />
                 {/* <Route
@@ -57,10 +74,25 @@ function App() {
                 <Route
                   path="/profile"
                   element={
-                    <>
-                      <Navigation />
-                      <Profile />
-                    </>
+                    <div className="relative">
+                      {/* Sidebar Navigation */}
+                      <Navigation
+                        isOpen={isSidebarOpen}
+                        setIsOpen={setIsSidebarOpen}
+                        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                      />
+
+                      {/* Main Content */}
+                      <main
+                        className={`transition-all duration-300 min-h-screen ${
+                          isSidebarOpen ? "md:ml-50" : "md:ml-20"
+                        }`}
+                      >
+                        <div>
+                          <Profile />
+                        </div>
+                      </main>
+                    </div>
                   }
                 />
                 <Route path="*" element={<Navigate to="/" replace />} />
