@@ -1,7 +1,16 @@
 <div align="center">
 <pre>
 
-<h3>A full-stack MERN web application focused on security.</h3>
+<h3>A full-stack MERN finance tracker web application focused on security.</h3>
+
+<p>FloQi is a smart application designed to help you stay on top of your finances. It provides you with a clear and 
+   insightful view of your expenditure, which helps you influence your spending habits and accomplish your budgeting goals.
+   Security is of prime focus, as financial data is highly sensitive. FloQi is cloaked with strong encryption and 
+   authentication that ensures your financial data is private and protected.
+   No matter if you want to track your expenses, prepare budgets, or you just need more control over your financial health, 
+   with FloQi it is easy, secure, and extremely simple.</p>
+
+<p> CURRENTLY WORKING ON!</p>
 
 </pre>
 </div>
