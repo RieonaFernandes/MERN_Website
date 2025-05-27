@@ -10,7 +10,7 @@
    No matter if you want to track your expenses, prepare budgets, or you just need more control over your financial health, 
    with FloQi it is easy, secure, and extremely simple.</p>
 
-<p> CURRENTLY WORKING ON!</p>
+<p><b> CURRENTLY WORKING ON!</b></p>
 
 </pre>
 </div>
@@ -67,10 +67,24 @@ http://<base-url>/docs
 
 <li><b>Home Page</b></li>
 
-This is a static home page.<br/>
-It has an Introduction and a Nav bar to help navigate between Home and Profile page.
+Right now it is a static home page.<br/>
+It has a Nav bar and stats (static right now) on the home page.
 <br/><br/>
 
 <li><b>Profile Page</b></li>
 
 You can see user information on this page and have an option to edit it (API creation/integration is not yet done).
+</ul>
+
+## Preview
+<b>Home page:</b><br/><br/>
+![alt text](https://github.com/RieonaFernandes/MERN_Website/blob/main/client/public/data/1.jpg)
+<br/><br/><br/>
+<b>Profile page:</b><br/><br/>
+![alt text](https://github.com/RieonaFernandes/MERN_Website/blob/main/client/public/data/2.jpg)
+<br/><br/><br/>
+<b>Login page:</b><br/><br/>
+![alt text](https://github.com/RieonaFernandes/MERN_Website/blob/main/client/public/data/3.jpg)
+<br/><br/><br/>
+<b>Sign up page:</b><br/><br/>
+![alt text](https://github.com/RieonaFernandes/MERN_Website/blob/main/client/public/data/4.jpg)
