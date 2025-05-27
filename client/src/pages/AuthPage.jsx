@@ -198,7 +198,7 @@ const AuthPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#18274A] via-[#16213D] to-[#0B1326]">
+    <div className="min-h-screen stacked-linear">
       <div className="flex items-center justify-center -mb-16">
         <img
           src={logo}

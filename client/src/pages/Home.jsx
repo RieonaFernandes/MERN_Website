@@ -40,7 +40,7 @@ const Home = () => {
     // Can add API
   };
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#18274A] via-[#16213D] to-[#0B1326] p-8">
+    <div className="min-h-screen stacked-linear p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center">

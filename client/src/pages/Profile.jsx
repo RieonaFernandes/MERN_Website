@@ -3,6 +3,8 @@ import { FiEdit, FiSave, FiUpload } from "react-icons/fi";
 import { decrypt } from "../utils/util";
 const baseUrl = import.meta.env.VITE_APP_API_BASE_URL;
 import Cookies from "js-cookie";
+import { NavLink } from "react-router-dom";
+import logo from "../assets/logo.png";
 
 const Profile = () => {
   const id = Cookies.get("userId");
@@ -92,156 +94,103 @@ const Profile = () => {
   if (!userData) return <div>Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-[#18274A] via-[#16213D] to-[#0B1326] px-4 py-20">
-      <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-[0_12px_40px_rgba(92,225,230,0.1)] p-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white funnel-display-bold">
-            Profile
-          </h1>
-          {isEditing ? (
-            <button
-              onClick={handleSave}
-              className="px-6 py-2 text-teal-300 rounded-3xl transition-all 
+    <div className="min-h-screen stacked-linear px-4 py-10">
+      <div className=" flex flex-col items-center justify-center">
+        {/* Logo Section */}
+        <NavLink
+          to="/home"
+          className={` flex items-center justify-center mb-6`}
+        >
+          <img
+            src={logo}
+            alt="FinTrack logo"
+            className={`transition-all w-24 h-24 mb-8`}
+            loading="eager"
+          />
+        </NavLink>
+
+        <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 shadow-[0_12px_40px_rgba(92,225,230,0.1)] p-8">
+          <div className="flex items-center justify-between mb-8">
+            <h1 className="text-3xl font-bold text-white funnel-display-bold">
+              Profile
+            </h1>
+            {isEditing ? (
+              <button
+                onClick={handleSave}
+                className="px-6 py-2 text-teal-300 rounded-3xl transition-all 
                 bg-white/20 hover:bg-white/30 cursor-pointer
                 font-medium flex items-center space-x-2 hover:scale-105 shadow-lg"
-            >
-              <FiSave className="text-lg" />
-              <span>Save Changes</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-6 py-2 bg-white/20 text-amber-300 rounded-3xl hover:bg-white/30 
-                transition-all font-medium flex items-center space-x-2 hover:scale-105 shadow-lg cursor-pointer"
-            >
-              <FiEdit className="text-lg" />
-              <span>Edit Profile</span>
-            </button>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Profile Image Section */}
-          <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-teal-300/80 mx-auto">
-            {profileImage ? (
-              <img
-                src={profileImage}
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
+              >
+                <FiSave className="text-lg" />
+                <span>Save Changes</span>
+              </button>
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-white/10 font-semibold text-amber-300 text-5xl funnel-display-reg">
-                {getInitials(userData.firstName, decrypt(userData.lastName))}
-              </div>
-            )}
-            {isEditing && (
-              <label className="absolute bottom-0 w-full bg-black/50 text-amber-300 text-center py-2 cursor-pointer hover:bg-white/30 transition-colors">
-                <FiUpload className="inline-block mr-2" />
-                Upload
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-              </label>
+              <button
+                onClick={() => setIsEditing(true)}
+                className="px-6 py-2 bg-white/20 text-amber-300 rounded-3xl hover:bg-white/30 
+                transition-all font-medium flex items-center space-x-2 hover:scale-105 shadow-lg cursor-pointer"
+              >
+                <FiEdit className="text-lg" />
+                <span>Edit Profile</span>
+              </button>
             )}
           </div>
 
-          {/* Personal Information */}
-          <div className="col-span-2 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={decrypt(userData.email)}
-                  disabled
-                  className="w-full bg-white/5 border border-white/20 rounded-2xl p-3 text-white/80 cursor-not-allowed"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Profile Image Section */}
+            <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-teal-300/80 mx-auto">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
                 />
-              </div>
-
-              {/* First Name Input */}
-              <div>
-                <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
-                  First Name
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-white/10 font-semibold text-amber-300 text-5xl funnel-display-reg">
+                  {getInitials(userData.firstName, decrypt(userData.lastName))}
+                </div>
+              )}
+              {isEditing && (
+                <label className="absolute bottom-0 w-full bg-black/50 text-amber-300 text-center py-2 cursor-pointer hover:bg-white/30 transition-colors">
+                  <FiUpload className="inline-block mr-2" />
+                  Upload
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
                 </label>
-                <input
-                  type="text"
-                  value={editedData.firstName}
-                  onChange={(e) =>
-                    setEditedData({ ...editedData, firstName: e.target.value })
-                  }
-                  disabled={!isEditing}
-                  className={`w-full p-3 rounded-2xl transition-all ${
-                    !isEditing
-                      ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
-                      : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
-                  }`}
-                />
-              </div>
-
-              {/* Middle Name Input */}
-              <div>
-                <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
-                  Middle Name
-                </label>
-                <input
-                  type="text"
-                  value={editedData.middleName}
-                  onChange={(e) =>
-                    setEditedData({ ...editedData, middleName: e.target.value })
-                  }
-                  disabled={!isEditing}
-                  className={`w-full p-3 rounded-2xl transition-all ${
-                    !isEditing
-                      ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
-                      : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
-                  }`}
-                />
-              </div>
-
-              {/* Last Name Input */}
-              <div>
-                <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  value={editedData.lastName}
-                  onChange={(e) =>
-                    setEditedData({ ...editedData, lastName: e.target.value })
-                  }
-                  disabled={!isEditing}
-                  className={`w-full p-3 rounded-2xl transition-all ${
-                    !isEditing
-                      ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
-                      : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
-                  }`}
-                />
-              </div>
+              )}
             </div>
 
-            {/* Phone Number Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-amber-300 funnel-display-reg">
-                Contact Information
-              </h3>
-              <div className="grid grid-cols-3 gap-4">
+            {/* Personal Information */}
+            <div className="col-span-2 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
-                    Country Code
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={decrypt(userData.email)}
+                    disabled
+                    className="w-full bg-white/5 border border-white/20 rounded-2xl p-3 text-white/80 cursor-not-allowed"
+                  />
+                </div>
+
+                {/* First Name Input */}
+                <div>
+                  <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
+                    First Name
                   </label>
                   <input
                     type="text"
-                    placeholder="+1"
-                    value={editedData.countryCode}
+                    value={editedData.firstName}
                     onChange={(e) =>
                       setEditedData({
                         ...editedData,
-                        countryCode: e.target.value,
+                        firstName: e.target.value,
                       })
                     }
                     disabled={!isEditing}
@@ -249,37 +198,111 @@ const Profile = () => {
                       !isEditing
                         ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
                         : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
-                    } ${errors.countryCode ? "border-red-500" : ""}`}
+                    }`}
                   />
-                  {errors.countryCode && (
-                    <p className="text-red-500 text-sm mt-1 funnel-display-sm">
-                      {errors.countryCode}
-                    </p>
-                  )}
                 </div>
 
-                <div className="col-span-2">
+                {/* Middle Name Input */}
+                <div>
                   <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
-                    Phone Number
+                    Middle Name
                   </label>
                   <input
-                    type="tel"
-                    value={editedData.phone}
+                    type="text"
+                    value={editedData.middleName}
                     onChange={(e) =>
-                      setEditedData({ ...editedData, phone: e.target.value })
+                      setEditedData({
+                        ...editedData,
+                        middleName: e.target.value,
+                      })
                     }
                     disabled={!isEditing}
                     className={`w-full p-3 rounded-2xl transition-all ${
                       !isEditing
                         ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
                         : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
-                    } ${errors.phone ? "border-red-500" : ""}`}
+                    }`}
                   />
-                  {errors.phone && (
-                    <p className="text-red-500 text-sm mt-1 funnel-display-sm">
-                      {errors.phone}
-                    </p>
-                  )}
+                </div>
+
+                {/* Last Name Input */}
+                <div>
+                  <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editedData.lastName}
+                    onChange={(e) =>
+                      setEditedData({ ...editedData, lastName: e.target.value })
+                    }
+                    disabled={!isEditing}
+                    className={`w-full p-3 rounded-2xl transition-all ${
+                      !isEditing
+                        ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
+                        : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Phone Number Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-bold text-amber-300 funnel-display-reg">
+                  Contact Information
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
+                      Country Code
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="+1"
+                      value={editedData.countryCode}
+                      onChange={(e) =>
+                        setEditedData({
+                          ...editedData,
+                          countryCode: e.target.value,
+                        })
+                      }
+                      disabled={!isEditing}
+                      className={`w-full p-3 rounded-2xl transition-all ${
+                        !isEditing
+                          ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
+                          : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
+                      } ${errors.countryCode ? "border-red-500" : ""}`}
+                    />
+                    {errors.countryCode && (
+                      <p className="text-red-500 text-sm mt-1 funnel-display-sm">
+                        {errors.countryCode}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-amber-300 funnel-display-sm mb-2">
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      value={editedData.phone}
+                      onChange={(e) =>
+                        setEditedData({ ...editedData, phone: e.target.value })
+                      }
+                      disabled={!isEditing}
+                      className={`w-full p-3 rounded-2xl transition-all ${
+                        !isEditing
+                          ? "bg-white/5 border border-white/20 text-white/50 cursor-not-allowed"
+                          : "bg-white/10 border border-amber-300/60 text-white focus:outline-none focus:ring-1 focus:ring-amber-300"
+                      } ${errors.phone ? "border-red-500" : ""}`}
+                    />
+                    {errors.phone && (
+                      <p className="text-red-500 text-sm mt-1 funnel-display-sm">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

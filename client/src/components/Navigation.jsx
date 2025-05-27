@@ -19,42 +19,13 @@ export default function Navigation({ isOpen, setIsOpen, onToggle }) {
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:block fixed left-0 top-0 h-screen bg-[#18274A] backdrop-blur-lg z-50 
+        className={`hidden md:block left-0 top-0 bg-white/10 rounded-lg backdrop-blur-lg py-15 z-50 
           shadow-lg transition-all duration-300 ${isOpen ? "w-50" : "w-20"}`}
       >
         <div className="flex flex-col h-full p-4">
-          {/* Logo Section */}
-          <NavLink to="/home" className="flex items-center justify-center mb-6">
-            <img
-              src={logo}
-              alt="FinTrack logo"
-              className={`transition-all ${
-                isOpen ? "w-24 h-24 mb-8" : "w-12 h-12"
-              }`}
-              loading="eager"
-            />
-          </NavLink>
-
           {/* Navigation Items */}
           <nav className="flex-1">
             <ul className="space-y-1">
-              {/* Collapse Button */}
-              <div className="relative">
-                <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className={`flex items-center space-x-3 p-3 rounded-xl transition-all
-                              text-gray-300 hover:bg-white/5 hover:text-teal-400 cursor-pointer
-                              ${isOpen ? "absolute right-0 bottom-1" : ""}`}
-                >
-                  {/* <FiMenu className={`absolute w-6 h-6 right-3 bottom-3`} /> */}
-                  <span className="text-xl">
-                    {isOpen ? <IoIosArrowBack /> : <IoIosArrowForward />}
-                  </span>
-                  {isOpen && (
-                    <span className="text-sm funnel-display-sm"></span>
-                  )}
-                </button>
-              </div>
               <SidebarItem
                 to="/home"
                 text="Dashboard"
@@ -91,6 +62,24 @@ export default function Navigation({ isOpen, setIsOpen, onToggle }) {
                 icon={<FiSettings />}
                 isOpen={isOpen}
               />
+              {/* Collapse Button */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsOpen(!isOpen)}
+                  className={`flex items-center space-x-3 p-3 rounded-xl transition-all
+                              text-gray-300 hover:bg-white/5 hover:text-teal-400 cursor-pointer
+                              ${isOpen ? "relative -right-31 -bottom-28" : ""}
+                              `}
+                >
+                  {/* <FiMenu className={`absolute w-6 h-6 right-3 bottom-3`} /> */}
+                  <span className="text-xl">
+                    {isOpen ? <IoIosArrowBack /> : <IoIosArrowForward />}
+                  </span>
+                  {isOpen && (
+                    <span className="text-sm funnel-display-sm"></span>
+                  )}
+                </button>
+              </div>
             </ul>
           </nav>
         </div>
@@ -106,7 +95,7 @@ export default function Navigation({ isOpen, setIsOpen, onToggle }) {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`md:hidden fixed left-0 top-0 h-screen bg-[#18274A] backdrop-blur-lg border-r border-orange-100 z-40 
+        className={`md:hidden left-0 top-0 h-screen bg-white/10 backdrop-blur-lg border-r border-orange-100 z-40 
         shadow-lg transition-transform duration-300 ${
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } w-50`}

@@ -4,10 +4,12 @@ import {
   Route,
   Outlet,
   Navigate,
+  NavLink,
 } from "react-router-dom";
 import { lazy, Suspense, useState } from "react";
 import Navigation from "./components/Navigation";
 import { isTokenValid } from "./utils/util";
+import logo from "../src/assets/logo.png";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
@@ -41,14 +43,31 @@ function App() {
                 <Route
                   path="/home"
                   element={
-                    <div className="relative">
+                    <div className="relative stacked-linear">
+                      <div>
+                        {/* Logo Section */}
+                        <NavLink
+                          to="/home"
+                          className={`fixed flex ${
+                            isSidebarOpen ? "top-5 left-10" : ""
+                          } mb-6`}
+                        >
+                          <img
+                            src={logo}
+                            alt="FinTrack logo"
+                            className={`transition-all w-24 h-24 mb-8`}
+                            loading="eager"
+                          />
+                        </NavLink>
+                      </div>
                       {/* Sidebar Navigation */}
-                      <Navigation
-                        isOpen={isSidebarOpen}
-                        setIsOpen={setIsSidebarOpen}
-                        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-                      />
-
+                      <div className="fixed flex h-screen py-30">
+                        <Navigation
+                          isOpen={isSidebarOpen}
+                          setIsOpen={setIsSidebarOpen}
+                          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                        />
+                      </div>
                       {/* Main Content */}
                       <main
                         className={`transition-all duration-300 min-h-screen ${
@@ -74,13 +93,15 @@ function App() {
                 <Route
                   path="/profile"
                   element={
-                    <div className="relative">
-                      {/* Sidebar Navigation */}
-                      <Navigation
-                        isOpen={isSidebarOpen}
-                        setIsOpen={setIsSidebarOpen}
-                        onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
-                      />
+                    <div className="relative stacked-linear">
+                      <div className="fixed flex h-screen py-30">
+                        {/* Sidebar Navigation */}
+                        <Navigation
+                          isOpen={isSidebarOpen}
+                          setIsOpen={setIsSidebarOpen}
+                          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                        />
+                      </div>
 
                       {/* Main Content */}
                       <main
