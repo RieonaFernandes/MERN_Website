@@ -77,6 +77,7 @@ async function loginUser(req, callback) {
       .toDate();
 
     let userId = encrypt(user._id.toString());
+    let userName = user.firstName;
 
     let res = await Users.findOneAndUpdate(
       { email },
@@ -107,7 +108,7 @@ async function loginUser(req, callback) {
         message: MESSAGE.LOGIN_SUCCESS,
         data: {
           userId,
-          // email,
+          userName,
           accessToken,
           accessTokenExpTime,
           refreshToken,

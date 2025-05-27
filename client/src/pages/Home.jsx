@@ -1,9 +1,25 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import SummaryCard from "../components/SummaryCard";
+import TransactionItem from "../components/TransactionItem";
+import ProgressItem from "../components/ProgressItem";
+import LineChartComp from "../components/LineChartComp";
+import CustomSelect from "../components/CustomSelect";
+import {
+  FiBell,
+  FiDollarSign,
+  FiArrowUpCircle,
+  FiArrowDownCircle,
+  FiPercent,
+  FiPlus,
+} from "react-icons/fi";
+import Cookies from "js-cookie";
+import { NavLink } from "react-router-dom";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const userName = Cookies.get("userName");
 
   const sanitizeInput = (input) => {
     return input.replace(/['";\\*\-]/g, "");
@@ -24,179 +40,135 @@ const Home = () => {
     // Can add API
   };
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      {/* Main Section */}
-      <div className="bg-[#1F2937] text-white py-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">
-            Industrial Supplies & Engineering Tools
+    <div className="min-h-screen stacked-linear p-8">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center">
+          <h1 className="text-2xl font-bold text-white funnel-display-bold">
+            Dashboard
           </h1>
-          <p className="text-lg mb-8">
-            Your trusted partner in industrial equipment and MRO supplies
-          </p>
+        </div>
+        <div className="flex items-center space-x-4">
+          {/* <button className="p-2 hover:bg-white/10 rounded-full">
+            <FiBell className="text-amber-300 text-xl" />
+          </button> */}
+          <NavLink
+            to="/profile"
+            className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-white/10 rounded-full"
+          >
+            <div className="w-8 h-8 bg-teal-400 rounded-full">
+              {/* {profile picture} */}
+            </div>
+            <span className="text-white funnel-display-reg">{userName}</span>
+          </NavLink>
+        </div>
+      </div>
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-2xl">
-            <div className="flex rounded-lg overflow-hidden">
-              <input
-                type="text"
-                placeholder="Search 500,000+ products..."
-                className="flex-1 bg-white px-4 py-3 text-gray-900"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+      {/* Main Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Financial Summary */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+            <h2 className="text-xl font-bold text-amber-300 mb-4 funnel-display-reg">
+              Financial Summary
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 funnel-display-sm">
+              <SummaryCard
+                title="Total Balance"
+                value="$45,230"
+                icon={<FiDollarSign className="text-teal-400" />}
               />
-              <button
-                type="submit"
-                className="bg-[#F59E0B] px-6 py-3 hover:bg-[#D97706] transition-colors cursor-pointer"
-              >
-                Search
-              </button>
+              <SummaryCard
+                title="Monthly Income"
+                value="$12,500"
+                icon={<FiArrowUpCircle className="text-green-500" />}
+              />
+              <SummaryCard
+                title="Monthly Expense"
+                value="$8,200"
+                icon={<FiArrowDownCircle className="text-red-500" />}
+              />
+              <SummaryCard
+                title="Savings Rate"
+                value="34%"
+                icon={<FiPercent className="text-amber-300" />}
+              />
             </div>
-            {errorMessage && (
-              <p className="text-red-300 mt-2 text-sm">{errorMessage}</p>
-            )}
-          </form>
+          </div>
+
+          {/* Spending Chart */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-amber-300 funnel-display-reg">
+                Spending Overview
+              </h2>
+              <CustomSelect options={["Monthly", "Weekly", "Yearly"]} />
+            </div>
+            <LineChartComp />
+          </div>
         </div>
-      </div>
 
-      {/* Categories Grid */}
-      <div className="container mx-auto px-4 py-16">
-        <h2 className="text-2xl font-bold text-[#1F2937] mb-8">
-          Popular Categories
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            "Power Tools",
-            "Safety Equipment",
-            "Hydraulics",
-            "Fasteners",
-            "Electrical",
-            "Plumbing",
-          ].map((category) => (
-            <div
-              key={category}
-              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-            >
-              <div className="h-12 w-12 bg-[#F59E0B] rounded-full mb-4 flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-[#1F2937] mb-2">
-                {category}
-              </h3>
-              <p className="text-gray-600">
-                Explore our wide range of {category.toLowerCase()} products
-              </p>
+        {/* Right Column */}
+        <div className="space-y-8">
+          {/* Budget Progress */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+            <h2 className="text-xl font-bold text-amber-300 mb-6">
+              Budget Progress
+            </h2>
+            <div className="space-y-4">
+              <ProgressItem
+                category="Groceries"
+                spent={320}
+                limit={500}
+                color="teal-400"
+              />
+              <ProgressItem
+                category="Entertainment"
+                spent={180}
+                limit={300}
+                color="amber-300"
+              />
+              <ProgressItem
+                category="Transport"
+                spent={150}
+                limit={250}
+                color="purple-400"
+              />
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      {/* Services Section */}
-      <div className="bg-gray-100 py-16">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="text-center">
-              <div className="h-12 w-12 bg-[#1F2937] rounded-full mb-4 mx-auto flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Next Day Delivery</h3>
-              <p className="text-gray-600">
-                Order by 8pm for next day delivery
-              </p>
+          {/* Recent Transactions */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-amber-300">
+                Recent Transactions
+              </h2>
+              {/* <FiPlus className="text-amber-300 cursor-pointer" /> */}
             </div>
-
-            <div className="text-center">
-              <div className="h-12 w-12 bg-[#1F2937] rounded-full mb-4 mx-auto flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Quality Assured</h3>
-              <p className="text-gray-600">
-                Premium products from trusted brands
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="h-12 w-12 bg-[#1F2937] rounded-full mb-4 mx-auto flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Expert Support</h3>
-              <p className="text-gray-600">Technical assistance 24/7</p>
+            <div className="space-y-4">
+              <TransactionItem
+                title="Netflix Subscription"
+                amount="$15.99"
+                category="Entertainment"
+                type="expense"
+              />
+              <TransactionItem
+                title="Salary Deposit"
+                amount="$4,500"
+                category="Income"
+                type="income"
+              />
+              <TransactionItem
+                title="Supermarket"
+                amount="$128.75"
+                category="Groceries"
+                type="expense"
+              />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="bg-[#1F2937] text-white py-12">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h4 className="font-bold mb-4">Company</h4>
-            <ul className="space-y-2">
-              {["About Us", "Careers", "Contact", "Locations"].map((item) => (
-                <li key={item}>
-                  <Link
-                    to="/home"
-                    className="hover:text-[#F59E0B] transition-colors"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className="mt-8 pt-8 border-t border-gray-700 text-center">
-          <p>&copy; 2024 Industrial Supplies. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 };

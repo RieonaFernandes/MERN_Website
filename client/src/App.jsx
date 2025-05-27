@@ -4,10 +4,12 @@ import {
   Route,
   Outlet,
   Navigate,
+  NavLink,
 } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import Navigation from "./components/Navigation";
 import { isTokenValid } from "./utils/util";
+import logo from "../src/assets/logo.png";
 
 const Home = lazy(() => import("./pages/Home"));
 const About = lazy(() => import("./pages/About"));
@@ -19,26 +21,64 @@ const isAuthenticated = () => {
   return isTokenValid();
 };
 
+const AuthRedirect = () => {
+  return isAuthenticated() ? <Navigate to="/home" replace /> : <AuthPage />;
+};
+
 const ProtectedRoute = () => {
   return isAuthenticated() ? <Outlet /> : <Navigate to="/" replace />;
 };
 
 function App() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div className="app-container">
       <Router>
         <Suspense fallback={<div>Loading...</div>}>
           <ErrorBoundary>
             <Routes>
-              <Route path="/" element={<AuthPage />} />
+              <Route path="/" element={<AuthRedirect />} />
               <Route element={<ProtectedRoute />}>
                 <Route
                   path="/home"
                   element={
-                    <>
-                      <Navigation />
-                      <Home />
-                    </>
+                    <div className="relative stacked-linear">
+                      <div>
+                        {/* Logo Section */}
+                        <NavLink
+                          to="/home"
+                          className={`fixed flex ${
+                            isSidebarOpen ? "top-5 left-10" : ""
+                          } mb-6`}
+                        >
+                          <img
+                            src={logo}
+                            alt="FinTrack logo"
+                            className={`transition-all w-24 h-24 mb-8`}
+                            loading="eager"
+                          />
+                        </NavLink>
+                      </div>
+                      {/* Sidebar Navigation */}
+                      <div className="fixed flex h-screen py-30">
+                        <Navigation
+                          isOpen={isSidebarOpen}
+                          setIsOpen={setIsSidebarOpen}
+                          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                        />
+                      </div>
+                      {/* Main Content */}
+                      <main
+                        className={`transition-all duration-300 min-h-screen ${
+                          isSidebarOpen ? "md:ml-50" : "md:ml-20"
+                        }`}
+                      >
+                        <div>
+                          <Home />
+                        </div>
+                      </main>
+                    </div>
                   }
                 />
                 {/* <Route
@@ -53,10 +93,27 @@ function App() {
                 <Route
                   path="/profile"
                   element={
-                    <>
-                      <Navigation />
-                      <Profile />
-                    </>
+                    <div className="relative stacked-linear">
+                      <div className="fixed flex h-screen py-30">
+                        {/* Sidebar Navigation */}
+                        <Navigation
+                          isOpen={isSidebarOpen}
+                          setIsOpen={setIsSidebarOpen}
+                          onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                        />
+                      </div>
+
+                      {/* Main Content */}
+                      <main
+                        className={`transition-all duration-300 min-h-screen ${
+                          isSidebarOpen ? "md:ml-50" : "md:ml-20"
+                        }`}
+                      >
+                        <div>
+                          <Profile />
+                        </div>
+                      </main>
+                    </div>
                   }
                 />
                 <Route path="*" element={<Navigate to="/" replace />} />
